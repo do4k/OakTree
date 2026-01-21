@@ -273,6 +273,21 @@ ipcMain.handle('file:listDirectories', async (event, dirPath) => {
   }
 });
 
+ipcMain.handle('file:readDirectory', async (event, dirPath) => {
+  try {
+    const entries = await fs.readdir(dirPath, { withFileTypes: true });
+    const files = entries.map(entry => ({
+      name: entry.name,
+      isDirectory: entry.isDirectory(),
+      isFile: entry.isFile()
+    }));
+    return { success: true, files };
+  } catch (error) {
+    console.error('Error reading directory:', error);
+    return { success: false, error: error.message, files: [] };
+  }
+});
+
 ipcMain.handle('file:deleteDirectory', async (event, dirPath) => {
   try {
     await fs.rm(dirPath, { recursive: true, force: true });

@@ -72,7 +72,29 @@ export const useProject = (): UseProjectReturn => {
     const initializeOaktreeDir = async () => {
       if (isElectron && window.electronAPI) {
         const homeDir = await window.electronAPI.getHomeDir();
-        const folder = `${homeDir}/.oaktree`;
+        const cwd = await window.electronAPI.getCwd();
+        
+        // Try home directory first
+        const homeOaktreeDir = `${homeDir}/.oaktree`;
+        const cwdOaktreeDir = `${cwd}/.oaktree`;
+        
+        // Check if CWD .oaktree exists and has projects
+        let useCwdDir = false;
+        try {
+          const cwdDirExists = await window.electronAPI.pathExists(cwdOaktreeDir);
+          if (cwdDirExists) {
+            // Check if it has any project folders
+            const files = await window.electronAPI.readDirectory(cwdOaktreeDir);
+            if (files.success && files.files && files.files.length > 0) {
+              console.log('Found existing .oaktree in CWD with projects, using that location');
+              useCwdDir = true;
+            }
+          }
+        } catch (error) {
+          console.log('CWD .oaktree not accessible:', error);
+        }
+        
+        const folder = useCwdDir ? cwdOaktreeDir : homeOaktreeDir;
         setOaktreeDir(folder);
         await window.electronAPI.ensureDir(folder);
       }

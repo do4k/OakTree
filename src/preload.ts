@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   isDirectory: (filePath) => ipcRenderer.invoke('file:isDirectory', filePath),
   ensureDir: (dirPath) => ipcRenderer.invoke('file:ensureDir', dirPath),
   listDirectories: (dirPath) => ipcRenderer.invoke('file:listDirectories', dirPath),
+  readDirectory: (dirPath) => ipcRenderer.invoke('file:readDirectory', dirPath),
   deleteDirectory: (dirPath) => ipcRenderer.invoke('file:deleteDirectory', dirPath),
   renameFile: (oldPath, newPath) => ipcRenderer.invoke('file:rename', oldPath, newPath),
   convertBitmapToPNG: (bitmapData) => ipcRenderer.invoke('file:convertBitmapToPNG', bitmapData),

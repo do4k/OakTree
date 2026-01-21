@@ -21,6 +21,7 @@ interface ElectronAPI {
   isDirectory: (filePath: string) => Promise<boolean>;
   ensureDir: (dirPath: string) => Promise<{ success: boolean; error?: string }>;
   listDirectories: (dirPath: string) => Promise<string[]>;
+  readDirectory: (dirPath: string) => Promise<{ success: boolean; files?: Array<{ name: string; isDirectory: boolean; isFile: boolean }>; error?: string }>;
   deleteDirectory: (dirPath: string) => Promise<{ success: boolean; error?: string }>;
   pathExists: (path: string) => Promise<boolean>;
   renameFile: (oldPath: string, newPath: string) => Promise<{ success: boolean; error?: string }>;
